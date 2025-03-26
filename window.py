@@ -42,3 +42,35 @@ class Line():
             self.point1.x, self.point1.y, self.point2.x, self.point2.y, 
             fill=fill_color, width=2,
         )
+
+
+class Cell():
+    def __init__(self, point1, point2, window):
+        self.left_wall = True
+        self.right_wall = True
+        self.top_wall = True
+        self.bottom_wall = True
+        self._x1 = point1.x
+        self._x2 = point2.x
+        self._y1 = point1.y
+        self._y2 = point2.y
+        self._win = window
+
+    def draw(self):
+        top_left = Point(self._x1, self._y1)
+        top_right = Point(self._x2, self._y1)
+        bot_left = Point(self._x1, self._y2)
+        bot_right = Point(self._x2, self._y2)
+        if self.left_wall:
+            line = Line(top_left, bot_left)
+            self._win.draw_line(line)
+        if self.right_wall:
+            line = Line(top_right, bot_right)
+            self._win.draw_line(line)
+        if self.top_wall:
+            line = Line(top_left, top_right)
+            self._win.draw_line(line)
+        if self.bottom_wall:
+            line = Line(bot_left, bot_right)
+            self._win.draw_line(line)
+
