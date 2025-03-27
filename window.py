@@ -40,7 +40,7 @@ class Line():
     def draw(self, canvas, fill_color="black"):
         canvas.create_line(
             self.point1.x, self.point1.y, self.point2.x, self.point2.y, 
-            fill=fill_color, width=3,
+            fill=fill_color, width=2,
         )
 
 
@@ -57,6 +57,8 @@ class Cell():
         self._win = window
 
     def draw(self):
+        if self._win is None:
+            return
         top_left = Point(self._x1, self._y1)
         top_right = Point(self._x2, self._y1)
         bot_left = Point(self._x1, self._y2)
@@ -80,8 +82,8 @@ class Cell():
             (self._y2 - self._y1)//2 + self._y1,
         )
         dest = Point(
-            (to_cell._x2 - to_cell._x1)/2 + to_cell._x1,
-            (to_cell._y2 - to_cell._y1)/2 + to_cell._y1,
+            (to_cell._x2 - to_cell._x1)//2 + to_cell._x1,
+            (to_cell._y2 - to_cell._y1)//2 + to_cell._y1,
         )
         line = Line(source, dest)
         if undo:
