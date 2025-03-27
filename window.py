@@ -40,7 +40,7 @@ class Line():
     def draw(self, canvas, fill_color="black"):
         canvas.create_line(
             self.point1.x, self.point1.y, self.point2.x, self.point2.y, 
-            fill=fill_color, width=2,
+            fill=fill_color, width=3,
         )
 
 
@@ -50,10 +50,10 @@ class Cell():
         self.right_wall = True
         self.top_wall = True
         self.bottom_wall = True
-        self._x1 = point1.x
-        self._x2 = point2.x
-        self._y1 = point1.y
-        self._y2 = point2.y
+        self._x1 = point1.x   # left x
+        self._x2 = point2.x   # right x
+        self._y1 = point1.y   # top y
+        self._y2 = point2.y   # bottom y
         self._win = window
 
     def draw(self):
@@ -74,3 +74,17 @@ class Cell():
             line = Line(bot_left, bot_right)
             self._win.draw_line(line)
 
+    def draw_move(self, to_cell, undo=False):
+        source = Point(
+            (self._x2 - self._x1)//2 + self._x1,
+            (self._y2 - self._y1)//2 + self._y1,
+        )
+        dest = Point(
+            (to_cell._x2 - to_cell._x1)/2 + to_cell._x1,
+            (to_cell._y2 - to_cell._y1)/2 + to_cell._y1,
+        )
+        line = Line(source, dest)
+        if undo:
+            self._win.draw_line(line, fill_color="gray")
+        else:
+            self._win.draw_line(line, fill_color="red")
