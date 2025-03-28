@@ -1,1 +1,1 @@
-# maze-solver
+# maze solver is another bootdev project
