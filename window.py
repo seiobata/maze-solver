@@ -45,7 +45,7 @@ class Line():
 
 
 class Cell():
-    def __init__(self, point1, point2, window):
+    def __init__(self, point1, point2, window=None): # Cell made with 2 Points
         self.left_wall = True
         self.right_wall = True
         self.top_wall = True
@@ -66,15 +66,27 @@ class Cell():
         if self.left_wall:
             line = Line(top_left, bot_left)
             self._win.draw_line(line)
+        else:
+            line = Line(top_left, bot_left)
+            self._win.draw_line(line, "white")
         if self.right_wall:
             line = Line(top_right, bot_right)
             self._win.draw_line(line)
+        else:
+            line = Line(top_right, bot_right)
+            self._win.draw_line(line, "white")
         if self.top_wall:
             line = Line(top_left, top_right)
             self._win.draw_line(line)
+        else:
+            line = Line(top_left, top_right)
+            self._win.draw_line(line, "white")
         if self.bottom_wall:
             line = Line(bot_left, bot_right)
             self._win.draw_line(line)
+        else:
+            line = Line(bot_left, bot_right)
+            self._win.draw_line(line, "white")
 
     def draw_move(self, to_cell, undo=False):
         source = Point(
