@@ -50,6 +50,7 @@ class Cell():
         self.right_wall = True
         self.top_wall = True
         self.bottom_wall = True
+        self.visited = False
         self._x1 = point1.x   # left x
         self._x2 = point2.x   # right x
         self._y1 = point1.y   # top y

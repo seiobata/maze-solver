@@ -1,5 +1,6 @@
 from window import Point, Cell
 from time import sleep
+from random import seed, choice
 
 
 class Maze():
@@ -12,6 +13,7 @@ class Maze():
             cell_size_x,
             cell_size_y,
             window=None,
+            new_seed=None,
         ):
         self._x = x
         self._y = y
@@ -21,9 +23,12 @@ class Maze():
         self._cell_size_x = cell_size_x
         self._cell_size_y = cell_size_y
         self._win = window
+        if new_seed:
+            seed(new_seed)
 
         self._create_cells()
         self._break_entrance_and_exit()
+        self._break_walls_r(0, 0)
 
     def _create_cells(self):
         for i in range(    # starts at far left of maze, steps cell_size_x 
@@ -65,3 +70,43 @@ class Maze():
         self._cells[0][0].draw()    # call on Cell.draw() directly
         self._cells[-1][-1].bottom_wall = False
         self._cells[-1][-1].draw()
+
+    def _break_walls_r(self, i, j):
+        self._cells[i][j].visited = True
+        while True:
+            neighbors = []
+
+            # adding neighbors of current cell as tuples
+            if i > 0 and not self._cells[i - 1][j].visited:
+                neighbors.append((i - 1, j)) # left neighbor
+            if i < self._num_cols - 1 and not self._cells[i + 1][j].visited:
+                neighbors.append((i + 1, j)) # right
+            if j > 0 and not self._cells[i][j - 1].visited:
+                neighbors.append((i, j - 1)) # top
+            if j < self._num_rows - 1 and not self._cells[i][j + 1].visited:
+                neighbors.append((i, j + 1)) # bottom
+
+            # if no more neighbors to visit, return
+            if len(neighbors) == 0:
+                self._cells[i][j].draw()
+                self._animate()
+                return
+            
+            # pick a random direction
+            neighbor = choice(neighbors)
+
+            #knock down walls between current and next cell
+            if neighbor[0] == i - 1: # left wall
+                self._cells[i][j].left_wall = False
+                self._cells[i - 1][j].right_wall = False
+            if neighbor[0] == i + 1: # right
+                self._cells[i][j].right_wall = False
+                self._cells[i + 1][j].left_wall = False
+            if neighbor[1] == j - 1: # top
+                self._cells[i][j].top_wall = False
+                self._cells[i][j - 1].bottom_wall = False
+            if neighbor[1] == j + 1: # bottom
+                self._cells[i][j].bottom_wall = False
+                self._cells[i][j + 1].top_wall = False
+            
+            self._break_walls_r(neighbor[0], neighbor[1])

@@ -12,7 +12,7 @@ def main():
     cell_size_y = (window_y - 2 * margin) // num_rows
     win = Window(window_x, window_y)
 
-    maze = Maze(margin, margin, num_rows, num_cols, cell_size_x, cell_size_y, win)
+    maze = Maze(margin, margin, num_rows, num_cols, cell_size_x, cell_size_y, win, 7)
 
     win.wait_for_close()
 
