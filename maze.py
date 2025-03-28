@@ -29,6 +29,7 @@ class Maze():
         self._create_cells()
         self._break_entrance_and_exit()
         self._break_walls_r(0, 0)
+        self._reset_cells_visited()
 
     def _create_cells(self):
         for i in range(    # starts at far left of maze, steps cell_size_x 
@@ -63,7 +64,7 @@ class Maze():
         if self._win is None:
             return
         self._win.redraw()
-        sleep(0.05)
+        sleep(0.01)
 
     def _break_entrance_and_exit(self):
         self._cells[0][0].top_wall = False
@@ -110,3 +111,60 @@ class Maze():
                 self._cells[i][j + 1].top_wall = False
             
             self._break_walls_r(neighbor[0], neighbor[1])
+
+    def _reset_cells_visited(self):
+        for columns in self._cells:
+            for cell in columns:
+                cell.visited = False
+
+    def solve(self):
+        return self._solve_r(0, 0)
+
+    def _solve_r(self, i, j):
+        self._animate()
+        current = self._cells[i][j]
+        current.visited = True
+        if current == self._cells[-1][-1]: # if at end cell, we're done
+            return True
+
+        if ( # check if can move to left cell
+            i > 0 and
+            not current.left_wall and
+            not self._cells[i - 1][j].visited
+        ):
+            if self._solve_helper(current, i - 1, j):
+                return True
+        
+        if ( # check right cell
+            i < self._num_cols - 1 and
+            not current.right_wall and
+            not self._cells[i + 1][j].visited
+        ):
+            if self._solve_helper(current, i + 1, j):
+                return True
+
+        if ( # check top cell
+            j > 0 and
+            not current.top_wall and
+            not self._cells[i][j - 1].visited
+        ):
+            if self._solve_helper(current, i, j - 1):
+                return True
+
+        if ( # check bottom cell
+            j < self._num_rows - 1 and
+            not current.bottom_wall and
+            not self._cells[i][j + 1].visited
+        ):
+            if self._solve_helper(current, i, j + 1):
+                return True
+        
+        return False
+
+    def _solve_helper(self, current, i, j):
+        next = self._cells[i][j]
+        current.draw_move(next)
+        if self._solve_r(i, j):
+            return True
+        else:
+            current.draw_move(next, True)
